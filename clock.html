@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>clock</title>
+
+	<script>
+		function nowdate(){
+			var t = new Date();
+			var Y = t.getFullYear();
+			var M = t.getMonth()+1;
+			var D = t.getDate();
+			var h = t.getHours();
+			var m = t.getMinutes();
+			var s = t.getSeconds();
+
+			M = checktime(M);
+			D = checktime(D);
+			h = checktime(h);
+			m = checktime(m);
+			s = checktime(s);
+						
+			document.getElementById("output").innerHTML = Y+"-"+M+"-"+D+"  "+h+":"+m+":"+s;
+
+            setTimeout(nowdate,500);
+		}
+		
+		function checktime(i){
+			if (i < 10){
+				i = "0" + i;
+			}
+		
+			return i;
+		}
+		
+	</script>
+
+</head>
+
+<body onload = "nowdate()">
+	<div id="output" style="
+	background-color:#FFFFFF;
+	font-size:27px;
+	font-family:Noto Sans TC;
+	opacity:0.4;
+	">
+	</div>
+</body>
+</heml>

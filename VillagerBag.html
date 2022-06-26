@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>villagerbag</title>
+
+	<script>
+        function villagerbag(){
+            var inputstring = document.getElementById("input").value;
+            var instart = inputstring.indexOf("Inventory: ");
+            var inend = inputstring.indexOf("]",instart);
+
+            var bagstring = inputstring.substring(instart,inend);            
+            var bag = "";
+            var bagstart = 0;
+            var bagend = 0;   
+
+            while(true){
+                bagstart = bagstring.indexOf("id",bagend);
+                if(bagstart == -1){break;}
+                bagend = bagstring.indexOf("}",bagstart);
+                bag = bag + bagstring.substring(bagstart,bagend) + "<br>";
+                console.log(bag);
+            }
+
+            document.getElementById("output").innerHTML = bag;
+        }
+	</script>
+</head>
+
+<body>
+    
+    <div>
+        <textarea id="input" rows="30" cols="100" oninput="villagerbag()">貼上實體資料</textarea>
+    </div>
+	
+    <div id="output" style="
+	background-color:#FFFFFF;
+	font-size:27px;
+	font-family:Noto Sans TC;
+	opacity:1;
+	">
+	</div>
+
+</body>
+</heml>
