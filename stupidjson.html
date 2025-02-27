@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <textarea id="inputdata" spellcheck="false"></textarea>
+    <!-- <textarea id="outputdata" readonly="true" spellcheck="false"></textarea> -->
+    <div id="outputdata"></div>
+    <textarea id="highlight" spellcheck="false"></textarea>
+</body>
+</html>
+<script>
+    const d = `/summon minecraft:zombified_piglin -1225.50 104.49 164.96 {Brain: {memories: {}}, HurtByTimestamp: 818, IsBaby: 0b, Invulnerable: 0b, FallFlying: 0b, AbsorptionAmount: 0.0f, InWaterTime: -1, PortalCooldown: 0, FallDistance: 0.0f, DeathTime: 0s, WorldUUIDMost: -662220969728851079L, Bukkit.Aware: 1b, HandDropChances: [0.085f, 0.085f], PersistenceRequired: 0b, Paper.OriginWorld: [I; -154185335, 1618953081, -1685690772, 140908072], Spigot.ticksLived: 253130, AngerTime: 65, AngryAt: [I; -1, -1956492613, -2147483648, 1947789870], Paper.FromNetherPortal: 1b, Motion: [0.0039892114928140624d, -0.0784000015258789d, 0.0030045009689237934d], Health: 20.0f, Bukkit.updateLevel: 2, Paper.SpawnReason: "NETHER_PORTAL", LeftHanded: 1b, OnGround: 0b, Air: 300s, Rotation: [306.9872f, -6.786301f], Paper.ShouldBurnInDay: 1b, HandItems: [{count: 1, id: "minecraft:golden_sword"}, {}], ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f], CanBreakDoors: 0b, ArmorItems: [{}, {}, {}, {}], Fire: -1s, CanPickUpLoot: 1b, attributes: [{id: "minecraft:follow_range", modifiers: [{amount: 0.05235477527007461d, id: "minecraft:random_spawn_bonus", operation: "add_multiplied_base"}], base: 35.0d}, {id: "minecraft:knockback_resistance", modifiers: [{amount: 0.016607465097419394d, id: "minecraft:random_spawn_bonus", operation: "add_value"}], base: 0.0d}, {id: "minecraft:movement_speed", base: 0.23000000417232513d}, {id: "minecraft:attack_damage", base: 5.0d}, {id: "minecraft:spawn_reinforcements", base: 0.0d}], HurtTime: 0s, WorldUUIDLeast: -7239986736768084440L, Paper.Origin: [-1231.5d, 113.0d, 151.5d], DrownedConversionTime: -1}`;
+    inputdata.value = d
+    highlight.value = "IsBaby\nFallFlying";
+    inputdata.oninput = e => {flow();}
+    highlight.oninput = e => {flow();}
+    
+
+    function flow(){
+        outputdata.innerHTML = "";
+        const outstr = re(inputdata.value);
+        highlightcheck(outstr);
+    }
+
+    function re(data){
+        let cnt = 0;
+        const s = "&ensp;";
+        const t = '<a style="color:silver">|</a>';
+        let outstr = "";
+        for(let i = 0; i < data.length; i++){
+            const v = data[i];
+            const va = data[i + 1];
+            const vb = data[i - 1];
+            if(v == "{" | v =="["){
+                cnt++;
+                if(va == "}" | va == "]"){
+                    outstr += `${v}`;
+                    continue;
+                }
+                outstr += `${v}\n${(t + s.repeat(3)).repeat(cnt)}`;
+                continue;
+            }
+            if(v == "}" | v == "]"){
+                cnt--;
+                if(va == "," | va == "}" | va == "]"){
+                    outstr += `\n${(t + s.repeat(3)).repeat(cnt)}${v}`;
+                    continue;
+                }
+                outstr += `\n${(t + s.repeat(3)).repeat(cnt)}${v}\n${(t + s.repeat(3)).repeat(cnt)}`;
+                continue;
+            }
+            if(v == ","){
+                outstr += `${v}\n${(t + s.repeat(3)).repeat(cnt)}`;
+                continue;
+            }
+            if(v == " "){
+                if(vb == ","){
+                    continue;
+                }
+            }
+
+            outstr += v;
+        }
+        // outputdata.innerHTML = outstr;
+        return outstr;
+    }
+
+    function highlightcheck(outstr){
+        const checklist = highlight.value.split("\n");
+        const strlist = outstr.split("\n");
+        for(let s of strlist){
+            for(const c of checklist){
+                s = s.replace(c, `<a style="background: indigo;">${c}</a>`);
+            }
+            const a = document.createElement("div");
+            a.innerHTML = s;
+            outputdata.append(a);
+        }
+    }
+
+    flow()
+</script>
+<style>
+    textarea, #outputdata{
+        margin: 10px;
+        width: 800px;
+        height: 900px;
+        font-family: monospace;
+        color: white;
+        background: rgba(0, 0, 0, 0.8);
+    }
+    #outputdata{
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+    body{
+        display: flex;
+        padding-bottom: 100px;
+        font-family: monospace;
+        color: white;
+        background: rgba(0, 0, 0, 0.8);
+        font-size: large;
+    }
+</style>
