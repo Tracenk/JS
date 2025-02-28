@@ -29,7 +29,7 @@
     function re(data){
         let cnt = 0;
         const s = "&ensp;";
-        const t = '<a style="color:silver">|</a>';
+        const t = '<a style="color:#9e9e9e66">|</a>';
         let outstr = "";
         for(let i = 0; i < data.length; i++){
             const v = data[i];
@@ -38,7 +38,7 @@
             if(v == "{" | v =="["){
                 cnt++;
                 if(va == "}" | va == "]"){
-                    outstr += `${v}`;
+                    outstr += v;
                     continue;
                 }
                 outstr += `${v}\n${(t + s.repeat(3)).repeat(cnt)}`;
@@ -46,6 +46,10 @@
             }
             if(v == "}" | v == "]"){
                 cnt--;
+                if(vb == "{" | vb == "["){
+                    outstr += v;
+                    continue;
+                }
                 if(va == "," | va == "}" | va == "]"){
                     outstr += `\n${(t + s.repeat(3)).repeat(cnt)}${v}`;
                     continue;
